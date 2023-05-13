@@ -1,0 +1,3 @@
+[submodule "emojify-python/utils"]
+	path = emojify-python/utils
+	url = zooey@localhost:~/Documents/code/python/utils
