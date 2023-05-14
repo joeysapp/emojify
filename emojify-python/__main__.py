@@ -17,16 +17,20 @@ example2 = 'I just want out of this prison!!!'
 def main(graph = None) -> int:
     # [ Get text ]
     if not graph:
-        graph = Graph(input('Please enter a string\n> '))
+        graph = Graph(example1)
+        # graph = Graph(input('Please enter a string\n> '))
     
     # [ Modify/add text ]
     probabilities = Probabilities([
         # Generators
+        # Are "probabilities"/occurence chances per word, or..
+        # Like, "generators" probably should .. generate a string, and then 
+        #    place that string at a random place in the string. right?
         { fn: genEmoji, occur: 10, repeat: 50, },   # Keep track of current/previous emojis
         { fn: genEmoticon, occur: 10, repeat: 0, }, 
 
         # Modifiers - Repeatable
-        { fn: doAsciiShift, occur: 5, repeat, 5 },  # Keep track of current/previous ascii - or have that in the Word/Sentence struct
+        { fn: doAsciiShift, occur: 5, repeat, 5 }, # Keep track of current/previous ascii - or have that in the Word/Sentence struct
         { fn: doStutter, occur: 20, repeat: 20, },
         { fn: doCaseShift, occur: 5, repeat: 5, },
 
