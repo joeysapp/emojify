@@ -1,33 +1,37 @@
-# todo(joeysapp): Make this an actual linked list (OR GRAPH)
 from .utils import Console
 
-# A container that (for now) just gives us the "current" node in the graph
-# Later: properties of the graph, etc.
+# Todo: properties of the graph, etc.
 class Graph():    
     def __init__(self, text='', *args, **kwargs):
         self.head = TextNode(text=text)
         self.nodes = { self.head.id: self.head }
         self.path = [self.head.id]
-        # todo =================
-        # more OOP.. have the Nodes/Verts themselves figure out who they know?
-        # self.edges = []...
-        # self.edges = [v1][v2] = weight. idk. been forever since graph theory
 
     def __repr__(self):
-        return "Graph(nodes={}, head={})".format(len(self.nodes.keys()), self.head)
+        return "Graph(nodes[{}], head={})".format(len(self.nodes.keys()), self.head)
 
-    def generate_next(self, amount=10, show=True):
-        # Look at self.head and generate N new items from that string, add them to its neighbors
-        # Print them out
+    def generate_next_text(self, text='', probabilities=None):
+        ## I want a function that I can pass an arbitrary number of functions to, with probabilities for each.
+        ## I want the function to roll a seeded random number and then execute a function if it matches the probability
+        ## 
+        ## Maybe I'd like, put each function into a list N times for each function and then randomly pick one? That seems kind of silly
+        # What is "Main Loop"?
+        text = text
+        # Add in generators, modify entire text here
+        return text
+
+    def generate_next_node(self, amount=10, probabilities=None, show=True):
+        "Look at self.head and generate N new items from that string, add them to its neighbor"
         candidates = {}
         choice_id = 'a'
         letter_choices = ['a', 'b', 'c']
         if show: Console.method('graph.generate({}) ->\n'.format(self.head))        
         for i in range(0, amount):
-            new_id = self.head.id + i
-            new_text = self.head.text
-            new_text += ' rawr XD' * i
+            # ============================================================
+            new_id = self.head.id+i
+            new_text = generate_next_text(text=self.head.text, probabilities=probabilities)
             tmp = TextNode(text=new_text, id=new_id)
+            # ============================================================
             candidates[letter_choices[i%3]] = tmp
             choice_id = tmp.id
             if show: Console.puts('\t[{}] {}\n'.format(letter_choices[i%3], tmp.text))
@@ -35,50 +39,24 @@ class Graph():
             choice_id = input('What number would you like to goto: ')
         else:
             choice_id = 0
-        print('adding: ', choice_id, candidates)
+        # Note: for now, we're just using this as a linked list lol.
         self.head.add_neighbor(candidates[choice_id])
         self.nodes.update({ choice_id: candidates[choice_id] })
         self.head = candidates[choice_id]
         
-
-
 # The Graph will be a collection of TextNodes (entire sentences, etc.)
-# Because: we want the gen./mod. to be based upon the entire Text itself, not just individual words.
+# -- becase: we want the gen./mod. to be based upon the entire Text itself, not just individual words.
 class TextNode():    
     def __init__(self, text='', id=0, *args, **kwargs):
         self.id = id;
         self.text = text;
-        self.neighbors = []; # List of TextNodes vs. list of ids... pythonic.. lel
+        self.neighbors = []; # Python, so just append actual 'references'
 
     def __repr__(self):
         return "TextNode({}, {})".format(self.id, self.text)
 
     def add_neighbor(self, node):
         self.neighbors.append(node)
-
-
-
-# TO CULL
-
-
-
-# This is called once per loop
-def modify(string):
-    next = string
-    # Loop through the string
-    items = string.split(' ') # Words, words+punctuation, punctuation
-    # >>> foo = 'This is, you see! a big @ @ !??? test!'
-    # ['This', 'is,', 'you', 'see!', 'a', 'big', '@', '@', '!???', 'test!']
-
-
-    return next;
-
-
-
-class Mutator():
-    def __init__(self, *args, **kwargs):
-        self.function = None
-
 
 
 # Figuring out how to do "dice rolls", etc.
