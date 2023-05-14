@@ -14,79 +14,33 @@ $ python3.8 -m emojify-python
 # What is "Main Loop"?
 
 
+
+#         color = "green" if command else "gray-0"
+#         cmd_str = "\"" + str(command) + "\"" if command else "None"
+#         Console.puts("\n\t-> {}, {}\n".format(
+#             Console.format(cmd_str, [color, "bold" if command else "italic"]),
+#             Console.format(pos, [color, "italic"])))
+
+
+
 import sys, textwrap, time, math
 
-# from text_mutators import stutter, asciiText
-# from text_adders import emojis, asciiFaces, asciiDecorators
-# from text_finishers import uwuify, mentions,
-from .types import Sentence, Word, WordType
-from .functions import modify
-# from methods import 
+from .lib import Graph
 
 example1 = 'haha you so silly zazzy how could you say that XD'
 example2 = 'I just want out of this prison!!!'
 
-# todo(joeysapp): Make this an actual linked list
-class Step():
-    def __init__(self, *args, **kwargs):
-        self.clear()
-
-    def __repr__(self):
-        return "original={}\nprevious={}\ncurrent={}\nnext={}".format(self.original, self.previous, self.current, self.next)
-
-    def generate(self):
-        # Change string, 'uwu's, 'stuttering', 'ascii change', 'LANGAUGE????', 'ModifyMeaningOfWord'
-        new_string = modify(self.current)
-        # Add items into string, emojis, emoticons, exclamations, phrases
-        new_string = generate(self.current)
-        self.next = new_string;
-
-    # While this isn't a truly linked list, we can't have more than one 'back' step
-    def back(self):
-        tmp = self.current
-        self.current = self.previous;
-        self.previous = self.current
-
-    def forward(self):
-        self.previous = self.current
-        self.current = self.next
-    
-    def reset(self):
-        self.previous = self.current
-        self.current = self.original        
-
-    def clear(self):
-        self.original = None
-        self.current = None
-        self.previous = None
-
-def main(step = Step()) -> int:
+def main(graph = None) -> int:
     # [ Get the string to do something to ]
-    if not step.current:
-        step.current = input('Please enter a string\n> ')
-        step.original = step.current
+    if not graph:
+        graph = Graph(input('Please enter a string\n> '))
         
     # [ Modify text ]
-    step.generate()
-    print(step)
-    
-    # [ Ask for step ]
-    choice = ''
-    steps = {
-        'f': { 'function': step.forward, 'msg': '[ F ] Step forwards' },
-        'b': { 'function': step.back, 'msg': '[ B ] Step backwards' },
-        'r': { 'function': step.reset, 'msg': '[ R ] Reset' },
-        'n': { 'function': step.clear, 'msg': '[ N ] New string' },
-        'q': { 'function': exit, 'msg': '[ Q ] Quit' },
-    }
-    for step_key in steps.keys():
-        print(steps[step_key]['msg'])
-    while choice not in steps:
-        choice = input(' > ').lower()
+    graph.generate_next(amount=3)
 
-    fn = steps[choice]['function']
-    fn()
-    main(step)
+    # [ Do it over again ]
+    main(graph)
+
 
 
 
