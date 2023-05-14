@@ -19,46 +19,74 @@ import sys, textwrap, time, math
 # from text_mutators import stutter, asciiText
 # from text_adders import emojis, asciiFaces, asciiDecorators
 # from text_finishers import uwuify, mentions,
-from .types import Word, WordType
+from .types import Sentence, Word, WordType
+from .functions import modify
 # from methods import 
 
 example1 = 'haha you so silly zazzy how could you say that XD'
 example2 = 'I just want out of this prison!!!'
 
-def main() -> int:
-    print('Please input a string.')
-    input_text = input(' > ')    
-    while True:
-        # [ Do something to text ]
-        words = input_text.split()
-        #  * Loop through entire string, look at each word/space/emoji/ascii and getFunction for it
-        #    - Pros: 
-        #  * Pick a random word/space/emoji/ascii and getFunction for it
-        #    - Pros: More granular string creation, more involved. or, loopable.
-        # [ Ask for next step ]
-        next_steps = {
-            'r': '[ R ] Repeat with previous string',
-            'c': '[ C ] Repeat with current string',
-            'x': '[ X ] Reset to original string',
-            'n': '[ N ] Input a new string',
-        }
-        for step_key in next_steps.keys():
-            print(next_steps[step_key])
-        input_step = ''
-        while input_step not in next_steps:
-            input_step = input(' > ')
+# todo(joeysapp): Make this an actual linked list
+class Step():
+    def __init__(self, *args, **kwargs):
+        self.clear()
+
+    def __repr__(self):
+        return "original={}\nprevious={}\ncurrent={}\nnext={}".format(self.original, self.previous, self.current, self.next)
+
+    def generate(self):
+        # Change string, 'uwu's, 'stuttering', 'ascii change', 'LANGAUGE????', 'ModifyMeaningOfWord'
+        new_string = modify(self.current)
+        # Add items into string, emojis, emoticons, exclamations, phrases
+        new_string = generate(self.current)
+        self.next = new_string;
+
+    # While this isn't a truly linked list, we can't have more than one 'back' step
+    def back(self):
+        tmp = self.current
+        self.current = self.previous;
+        self.previous = self.current
+
+    def forward(self):
+        self.previous = self.current
+        self.current = self.next
+    
+    def reset(self):
+        self.previous = self.current
+        self.current = self.original        
+
+    def clear(self):
+        self.original = None
+        self.current = None
+        self.previous = None
+
+def main(step = Step()) -> int:
+    # [ Get the string to do something to ]
+    if not step.current:
+        step.current = input('Please enter a string\n> ')
+        step.original = step.current
         
+    # [ Modify text ]
+    step.generate()
+    print(step)
+    
+    # [ Ask for step ]
+    choice = ''
+    steps = {
+        'f': { 'function': step.forward, 'msg': '[ F ] Step forwards' },
+        'b': { 'function': step.back, 'msg': '[ B ] Step backwards' },
+        'r': { 'function': step.reset, 'msg': '[ R ] Reset' },
+        'n': { 'function': step.clear, 'msg': '[ N ] New string' },
+        'q': { 'function': exit, 'msg': '[ Q ] Quit' },
+    }
+    for step_key in steps.keys():
+        print(steps[step_key]['msg'])
+    while choice not in steps:
+        choice = input(' > ').lower()
 
-
-
-
-
-
-
-
-
-
-
+    fn = steps[choice]['function']
+    fn()
+    main(step)
 
 
 

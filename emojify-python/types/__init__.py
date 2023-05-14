@@ -1,5 +1,5 @@
-from .word import Word, WordType
+from .word import Sentence, Word, WordType
 
 __all__ = [
-    Word, WordType
+    Sentence, Word, WordType
 ]

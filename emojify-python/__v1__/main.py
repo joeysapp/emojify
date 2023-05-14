@@ -1,3 +1,14 @@
+# NOTE(@joeysapp @ 2023-05-13):
+#  I was creating the new v2/v3 and moving stuff around and deleted this >_>
+#  so this is a week old or something and is not 100% functional. rip.
+
+
+
+
+
+
+
+
 
 # todo(@joeysapp @ 2023-04-23): made this a lot better imo
 # - Figure out emoji generation and things like: 🖑emojis!!!! also
@@ -376,7 +387,7 @@ while loop:
         options['emoji'] = new_emoji_prob
         options['unicode'] = new_unicode_prob
         probabilities_updated = True
-      else:g
+      else:
         print('<ERROR> Your two probabilities must sum to 1.')
   elif menu_choice == 'c':
     input_text = fin_text
