@@ -1,12 +1,28 @@
-# IDEA:
+IDEA:
 
-Should types + generators + mutators be held in a single location, e.g.
-- Word
-- + type, sentiment, etc.
-- + doMutate()
-- + + stutter
-- + + ascii
-- Word.generateFrom() or something. idk
+Should types + generators + mutators be held in the Node type?
+Or should all the mutators/generators be in the "Probabilities" thing?
+
+# NodeTypes
+# Sentence - which contains a list of other NodeTypes
+#      Word
+#        - User
+#        - Noun, verb, etc
+#      Symbol
+#        - Punctuation ,. !?;:
+#        - Emoji
+#        - Misc %#
+class NodeType():
+    def __init__(self, value=None, *args=[], **kwargs):
+        self.value = value
+        self.type = self.getType(value)
+        self.sentiment = None # getSentiment(value)
+
+    def mutate(self, function):
+        return None    
+
+    def getType(self, val):
+        return None
 
 
 class Sentence():
@@ -40,6 +56,17 @@ class WordType():
 
     def __repr__(self):
         return "WordType({})".format(self.__dict__)
+
+
+
+
+
+
+
+
+
+
+
 def getRandomUnicodeText(word, unicode_idx=None, unicode_reset=0):
   if DEBUG: print('* getRandomUnicodeText('+str(word)+')')
   alpha = 'abcdefghijklmnopqrstuv'

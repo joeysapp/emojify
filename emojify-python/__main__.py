@@ -2,7 +2,7 @@
 """
 Interactive tool for messing with text
 $ cd ../
-$ python3.8 -m emojify-python
+$ python3 -m emojify-python
 """
 # -- V2 Goals
 # Agnostic enough to be used in Javascript on website/discord
@@ -21,24 +21,27 @@ def main(graph = None) -> int:
         # graph = Graph(input('Please enter a string\n> '))
     
     # [ Modify/add text ]
+    fn, occur, repeat = ['python', 'dicts', 'are annoying']
+    
     probabilities = Probabilities([
         # Generators
-        # Are "probabilities"/occurence chances per word, or..
-        # Like, "generators" probably should .. generate a string, and then 
-        #    place that string at a random place in the string. right?
-        { fn: genEmoji, occur: 10, repeat: 50, },   # Keep track of current/previous emojis
-        { fn: genEmoticon, occur: 10, repeat: 0, }, 
+        { fn: genEmoji, occur: 10, repeat: 50 },          # :)
+        { fn: genEmoticon, occur: 10, repeat: 0 },        # :3
+        { fn: genPhrase, occur: 10, repeat: 10 },          # . lmao XD. *riips bong*
 
         # Modifiers - Repeatable
-        { fn: doAsciiShift, occur: 5, repeat, 5 }, # Keep track of current/previous ascii - or have that in the Word/Sentence struct
-        { fn: doStutter, occur: 20, repeat: 20, },
-        { fn: doCaseShift, occur: 5, repeat: 5, },
+        { fn: doAsciiShift, occur: 5, repeat: 5 },         # 
+        { fn: doStutter, occur: 20, repeat: 20 },         # y-you r-r-re-really
+        { fn: doCaseShift, occur: 5, repeat: 5 },         # oH mY GoOdNeSS OMG omg
+        { fn: doExtendPunctuation, occur: 5, repeat: 5 }, # !!11!!1 ??//1//1 ... ....
+        { fn: doExtendWord, occur: 5, repeat: 5 },        # goshhhhhhhh
+        { fn: doEmphasize, occur: 5, repeat: 5 },         # word: 
 
-        # Modifiers - final/once
+        # Modifiers - Once
         { fn: doLisp, occur: 5 },
         { fn: doUwu, occur: 5 },
     ])
-    graph.generate_next_node(amount=3, probabilities)
+    graph.generate_next_node(amount=3, probabilities=probabilities)
 
     # [ Repeat ]
     main(graph)

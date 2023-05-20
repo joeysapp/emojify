@@ -2,58 +2,46 @@ from .utils import Console
 
 # Todo: properties of the graph, etc.
 class Graph():    
-    def __init__(self, text='', *args, **kwargs):
-        self.head = TextNode(text=text)
+    def __init__(self, value='', *args, **kwargs):
+        self.head = Node(value)
         self.nodes = { self.head.id: self.head }
         self.path = [self.head.id]
 
     def __repr__(self):
         return "Graph(nodes[{}], head={})".format(len(self.nodes.keys()), self.head)
 
-    def generate_next_text(self, text='', probabilities=None):
-        ## I want a function that I can pass an arbitrary number of functions to, with probabilities for each.
-        ## I want the function to roll a seeded random number and then execute a function if it matches the probability
-        ## 
-        ## Maybe I'd like, put each function into a list N times for each function and then randomly pick one? That seems kind of silly
-        # What is "Main Loop"?
-        text = text
-        # Add in generators, modify entire text here
-        return text
-
     def generate_next_node(self, amount=10, probabilities=None, show=True):
-        "Look at self.head and generate N new items from that string, add them to its neighbor"
-        candidates = {}
-        choice_id = 'a'
-        letter_choices = ['a', 'b', 'c']
-        if show: Console.method('graph.generate({}) ->\n'.format(self.head))        
+        "Look at self.head and generate N Nodes from that string, [currently] ask user to pick one"
+        candidates = []
+        if show: Console.method('graph.generate_next_node({}) ->\n'.format(self.head))        
         for i in range(0, amount):
             # ============================================================
-            new_id = self.head.id+i
-            new_text = generate_next_text(text=self.head.text, probabilities=probabilities)
-            tmp = TextNode(text=new_text, id=new_id)
+            new_id = self.head.id+i # nodes probably should have a hash function eventually
+            new_value = probabilities.next(self.head)
+            tmp = Node(value=new_text, id=new_id)
             # ============================================================
-            candidates[letter_choices[i%3]] = tmp
-            choice_id = tmp.id
-            if show: Console.puts('\t[{}] {}\n'.format(letter_choices[i%3], tmp.text))
-        if amount > 1:
-            choice_id = input('What number would you like to goto: ')
-        else:
-            choice_id = 0
+            # Simple user-input choice dealio right now
+            candidates.append(tmp)
+            if show: Console.puts('\t[#{}] {}\n'.format(letter_choices[i%3], tmp.text))
+        choice_idx = False
+        while choice_idx not in candidates and amount > 1:
+            choice_idx = int(input('Please pick a generation: '))
+        new_node = candidates[choice_idx or 0]
         # Note: for now, we're just using this as a linked list lol.
-        self.head.add_neighbor(candidates[choice_id])
-        self.nodes.update({ choice_id: candidates[choice_id] })
-        self.head = candidates[choice_id]
+        self.head.add_neighbor(new_node)
+        self.nodes.update({ [new_node.id]: new_node })
+        self.head = new_node
         
-# The Graph will be a collection of TextNodes (entire sentences, etc.)
+# The Graph will be a collection of Node, which themselves have a Type
 # -- becase: we want the gen./mod. to be based upon the entire Text itself, not just individual words.
-class TextNode():    
-    def __init__(self, text='', id=0, *args, **kwargs):
+class Node():    
+    def __init__(self, value=None, id=0, neighbors=[], *args, **kwargs):
+        self.value = value;
         self.id = id;
-        self.text = text;
         self.neighbors = []; # Python, so just append actual 'references'
 
     def __repr__(self):
-        return "TextNode({}, {})".format(self.id, self.text)
+        return "Node({}, {})".format(self.id, self.text)
 
     def add_neighbor(self, node):
         self.neighbors.append(node)
